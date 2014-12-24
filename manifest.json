@@ -1,0 +1,16 @@
+{
+  "name": "Phaxio Omnibox Extension",
+  "version": "1.0",
+  "manifest_version": 2,
+  "omnibox": { "keyword" : "phaxio" },
+  "icons": {
+    "16": "16-full-color.png",
+    "48": "48-full-color.png",
+    "128": "128-full-color.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  }
+}
+  
