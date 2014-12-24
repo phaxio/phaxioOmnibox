@@ -1,50 +1,61 @@
-chrome.experimental.omnibox.onInputChanged.addListener(function (text, suggest) {
+var Phaxio = {};
 
-    if (isIdQuery(text)){
-        suggestions.push({ content: 'View fax ' + text.trim(), description: 'View fax ' + text.trim() });
+Phaxio.isPhoneNumberQuery = function(text){
+    return !Phaxio.isTagQuery(text);
+};
+
+Phaxio.isTagQuery = function(text){
+    return text.indexOf(":") != -1;
+};
+
+Phaxio.isIdQuery = function(text){
+    return text.indexOf("#") == 0  && Phaxio.isNumeric(text.replace("#", ""));
+};
+
+Phaxio.isDownloadQuery = function(text){
+    return text.indexOf("v") == 0 && Phaxio.isNumeric(text.replace("v", ""));
+};
+
+Phaxio.isNumeric = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
+chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
+
+	var suggestions = [];
+	contentText = text + ' ';
+    if (Phaxio.isIdQuery(text)){
+        suggestions.push({ content: contentText, description: 'View fax ' + text });
     }
-    else if (isDownloadQuery(text)){
-        suggestions.push({ content: 'Download fax ' + text.trim(), description: 'Download fax ' + text.trim() });
+    else if (Phaxio.isDownloadQuery(text)){
+        suggestions.push({ content: contentText, description: 'Download fax ' + text });
     }
-    else if (isTagQuery(text)){
-        suggestions.push({ content: 'Search for faxes with tag "' + text.trim() + '"', description: 'Search for fax with tags "' + text.trim() + '"' });
+    else if (Phaxio.isTagQuery(text)){
+        suggestions.push({ content: contentText, description: 'Search for fax with tags "' + text + '"' });
     }
-    else if (isPhoneNumberQuery(text)){
-        suggestions.push({ content: 'Search for fax to phone number "' + text.trim() + '"', description: 'Search for fax to phone number "' + text.trim() + '"' });
+    else if (Phaxio.isPhoneNumberQuery(text)){
+        suggestions.push({ content: contentText, description: 'Search for fax to phone number "' + text + '"' });
     }
+
+    suggest(suggestions);
 
 });
 
-chrome.experimental.omnibox.onInputEntered.addListener(function (text) {
-    if (isIdQuery(text)){
-        var cleanId = text.trim().replace("#", "");
-        navigate("https://www.phaxio.com/viewFax?faxId=" + cleanId );
+chrome.omnibox.onInputEntered.addListener(function (text) {
+    var url = "";
+    if (Phaxio.isIdQuery(text)){
+        var cleanId = text.replace("#", "");
+        url = "https://www.phaxio.com/viewFax?faxId=" + cleanId;
     }
-    else if (isDownloadQuery(text)){
-        var cleanId = text.trim().replace("#", "");
-        navigate("https://www.phaxio.com/viewFax/file?fileType=payload&faxId=" + cleanId );
+    else if (Phaxio.isDownloadQuery(text)){
+        var cleanId = text.replace("#", "").replace("v", "");
+        url = "https://www.phaxio.com/viewFax/file?fileType=payload&faxId=" + cleanId;
     }
-    else if (isTagQuery(text) || isPhoneNumberQuery(text)){
-        navigate("https://www.phaxio.com/logs?log_filter%5Bquery%5D=" + text.trim());
+    else if (Phaxio.isTagQuery(text) || Phaxio.isPhoneNumberQuery(text)){
+        url = "https://www.phaxio.com/logs?log_filter%5Bquery%5D=" + text;
     }
-}
 
-function isPhoneNumberQuery(text){
-    return !isTagQuery(text);
-}
-
-function isTagQuery(text){
-    return text.trim().indexOf(":") != -1;
-}
-
-function isIdQuery(text){
-    return text.trim().indexOf("#") == 0  && isNumeric(text.trim().replace("#", ""));
-}
-
-function isDownloadQuery(text){
-    return text.trim.indexOf("v" == 0) && isNumeric(text.trim().replace("v", ""));
-}
-
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
+    chrome.tabs.update({
+     'url': url
+	});
+});

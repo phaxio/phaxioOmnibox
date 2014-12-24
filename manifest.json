@@ -1,5 +1,5 @@
 {
-  "name": "Phaxio Omnibox Extension",
+  "name": "Phaxio",
   "version": "1.0",
   "manifest_version": 2,
   "omnibox": { "keyword" : "phaxio" },
