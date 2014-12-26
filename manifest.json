@@ -1,12 +1,14 @@
 {
-  "name": "Phaxio",
-  "version": "1.0",
+  "name": "Phaxio Search",
+  "default_locale": "en",
+  "version": "1.1",
+  "description": "Search your Phaxio with the Chrome omnibox",
   "manifest_version": 2,
   "omnibox": { "keyword" : "phaxio" },
   "icons": {
     "16": "16-full-color.png",
-    "48": "48-full-color.png",
-    "128": "128-full-color.png"
+    "48": "16-full-color.png",
+    "128": "16-full-color.png"
   },
   "background": {
     "persistent": false,
