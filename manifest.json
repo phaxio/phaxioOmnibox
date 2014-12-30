@@ -1,6 +1,6 @@
 {
-  "name": "Phaxio Search",
-  "default_locale": "en",
+  "name": "Phaxio Omnibox Search",
+  "short_name": "Phaxio Search",
   "version": "1.1",
   "description": "Search your Phaxio with the Chrome omnibox",
   "manifest_version": 2,
