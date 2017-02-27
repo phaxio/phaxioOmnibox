@@ -45,14 +45,14 @@ chrome.omnibox.onInputEntered.addListener(function (text) {
     var url = "";
     if (Phaxio.isIdQuery(text)){
         var cleanId = text.replace("#", "");
-        url = "https://www.phaxio.com/viewFax?faxId=" + cleanId;
+        url = "https://console.phaxio.com/viewFax?faxId=" + cleanId;
     }
     else if (Phaxio.isDownloadQuery(text)){
         var cleanId = text.replace("#", "").replace("v", "");
-        url = "https://www.phaxio.com/viewFax/file?fileType=payload&faxId=" + cleanId;
+        url = "https://console.phaxio.com/viewFax/file?fileType=payload&faxId=" + cleanId;
     }
     else if (Phaxio.isTagQuery(text) || Phaxio.isPhoneNumberQuery(text)){
-        url = "https://www.phaxio.com/logs?log_filter%5Bquery%5D=" + text;
+        url = "https://console.phaxio.com/logs?log_filter%5Bquery%5D=" + text;
     }
 
     chrome.tabs.update({
